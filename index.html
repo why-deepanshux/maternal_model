@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Form</title>
+</head>
+<body>
+    <h2>Enter Data for Prediction</h2>
+    <form id="prediction-form">
+        <label for="heart-rate">Heart Rate:</label>
+        <input type="number" id="heart-rate" name="heart-rate" required><br><br>
+
+        <label for="calories">Calories:</label>
+        <input type="number" id="calories" name="calories" required><br><br>
+
+        <label for="trimester">Trimester:</label>
+        <input type="number" id="trimester" name="trimester" required><br><br>
+
+        <label for="sleep-time">Sleep Time:</label>
+        <input type="number" id="sleep-time" name="sleep-time" required><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="prediction-result"></div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: JSON.stringify(Object.fromEntries(formData)),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('prediction-result').innerText = 'Prediction: ' + data.prediction;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
